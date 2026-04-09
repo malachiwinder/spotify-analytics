@@ -4,11 +4,12 @@ from spotipy.oauth2 import SpotifyOAuth
 from flask import Flask, render_template, redirect, request, session, url_for
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
 
-CLIENT_ID = "863bcafa651a46ae9f529e226350fd69"
-CLIENT_SECRET = "5dc548afbdcd4c289618af1806fb18d3"
-REDIRECT_URI = "http://127.0.0.1:5000/callback"
+CLIENT_ID = os.environ.get("CLIENT_ID")
+CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+REDIRECT_URI = os.environ.get("REDIRECT_URI")
+app.secret_key = os.environ.get("SECRET_KEY")
+
 SCOPE = "user-top-read"
 
 def get_spotify_oauth():
