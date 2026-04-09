@@ -4,6 +4,9 @@ A full-stack web app that lets anyone log in with their Spotify account and view
 
 🔗 **Live Demo: [spotify-analytics-llfs.onrender.com](https://spotify-analytics-llfs.onrender.com)**
 
+![Dashboard Screenshot](screenshot1.png)
+![Dashboard Screenshot](screenshot2.png)
+
 ---
 
 ## Features
@@ -29,8 +32,7 @@ A full-stack web app that lets anyone log in with their Spotify account and view
 
 ## How to Run Locally
 
-1. Clone the repo ```git clone https://github.com/malachiwinder/spotify-analytics.git```
-   --> ```cd spotify-analytics```
+1. Clone the repo ```git clone https://github.com/malachiwinder/spotify-analytics.git cd spotify-analytics```
 
 3. Install dependencies
 ```pip install -r requirements.txt```
