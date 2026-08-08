@@ -256,6 +256,40 @@
         .track-row:nth-child(9) { animation-delay: 0.45s; }
         .track-row:nth-child(10) { animation-delay: 0.5s; }
 
+        .trend-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .trend-col h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1em;
+            letter-spacing: 0.08em;
+            color: var(--green);
+            margin-bottom: 14px;
+        }
+
+        .trend-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .trend-pill {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 0.85em;
+            color: var(--text);
+        }
+
+        .trend-empty {
+            color: var(--muted);
+            font-size: 0.85em;
+        }
+
         footer {
             margin-top: 80px;
             padding-top: 32px;
@@ -300,14 +334,14 @@
         </div>
         <div class="artists-grid">
             {% for a in artists %}
-            <div class="artist-card">
-                {% if a.image %}<img src="{{ a.image }}" alt="{{ a.name }}">
-                {% else %}<div class="no-img">🎤</div>{% endif %}
-                <div class="overlay">
-                    <div class="artist-rank">#{{ loop.index }} ARTIST</div>
-                    <div class="artist-name">{{ a.name }}</div>
+                <div class="artist-card">
+                    {% if a.image %}<img src="{{ a.image }}" alt="{{ a.name }}">
+                    {% else %}<div class="no-img">🎤</div>{% endif %}
+                    <div class="overlay">
+                        <div class="artist-rank">#{{ loop.index }} ARTIST</div>
+                        <div class="artist-name">{{ a.name }}</div>
+                    </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
     </div>
@@ -320,16 +354,46 @@
         </div>
         <div class="tracks-list">
             {% for t in tracks %}
-            <div class="track-row">
-                <span class="track-num">{{ loop.index }}</span>
-                {% if t.image %}<img class="track-art" src="{{ t.image }}" alt="{{ t.name }}">
-                {% else %}<div class="track-art-placeholder">🎵</div>{% endif %}
-                <div>
-                    <div class="track-name">{{ t.name }}</div>
-                    <div class="track-artist">{{ t.artist }}</div>
+                <div class="track-row">
+                    <span class="track-num">{{ loop.index }}</span>
+                    {% if t.image %}<img class="track-art" src="{{ t.image }}" alt="{{ t.name }}">
+                    {% else %}<div class="track-art-placeholder">🎵</div>{% endif %}
+                    <div>
+                        <div class="track-name">{{ t.name }}</div>
+                        <div class="track-artist">{{ t.artist }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <span class="section-num">03</span>
+            <h2>LISTENING TRENDS</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="trend-columns">
+            <div class="trend-col">
+                <h3>TRENDING NOW</h3>
+                <div class="trend-pills">
+                    {% for name in classified.trending %}
+                        <span class="trend-pill">{{ name }}</span>
+                    {% else %}
+                        <span class="trend-empty">No new trending artists right now.</span>
+                    {% endfor %}
                 </div>
             </div>
-            {% endfor %}
+            <div class="trend-col">
+                <h3>CONSISTENT FAVORITES</h3>
+                <div class="trend-pills">
+                    {% for name in classified.consistent %}
+                        <span class="trend-pill">{{ name }}</span>
+                    {% else %}
+                        <span class="trend-empty">No long-term consistent favorites yet.</span>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 

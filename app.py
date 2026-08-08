@@ -1,7 +1,13 @@
 import os
 import spotipy
+import pandas as pd
+
 from spotipy.oauth2 import SpotifyOAuth
 from flask import Flask, render_template, redirect, request, session, url_for
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -56,7 +62,47 @@ def dashboard():
     user = sp.current_user()
     username = user.get("display_name", "Listener")
 
-    return render_template("dashboard.html", artists=artists, tracks=tracks, username=username)
+    ranges_data = fetch_top_artists_all_ranges(sp)
+    for r, artist_list in ranges_data.items():
+        print(r, [a.get("name") for a in artist_list])
+
+    ranges_data = fetch_top_artists_all_ranges(sp)
+    rows = build_artist_range_rows(ranges_data)
+    classified = classify_artists(rows)
+    print(classified)
+
+    return render_template("dashboard.html", artists=artists, tracks=tracks, username=username, classified=classified)
+
+def fetch_top_artists_all_ranges(sp):
+    ranges = ["short_term", "medium_term", "long_term"]
+    results = {}
+    for r in ranges:
+        top_artists_response = sp.current_user_top_artists(time_range=r)  # call the API for this time range
+        results[r] = top_artists_response["items"]  # store just the artist list, keyed by the range name
+    return results
+
+def build_artist_range_rows(ranges_data):
+    rows = []
+    for time_range, artist_list in ranges_data.items():
+        for artist in artist_list:
+            rows.append({"artist": artist.get("name"), "time_range": time_range})
+    return rows
+
+def classify_artists(rows):
+    df = pd.DataFrame(rows)
+    presence = pd.crosstab(df["artist"], df["time_range"]) > 0
+
+    trending = presence[
+        presence.get("short_term", False) & ~presence.get("long_term", False)
+        ].index.tolist()
+
+    consistent = presence[
+        presence.get("short_term", False) &
+        presence.get("medium_term", False) &
+        presence.get("long_term", False)
+        ].index.tolist()
+
+    return {"trending": trending, "consistent": consistent}
 
 @app.route("/logout")
 def logout():
